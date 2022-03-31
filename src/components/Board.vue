@@ -12,9 +12,11 @@
 </template>
 
 <script>
+import { patchGame, deleteGame } from "../client/index";
 
 export default {
  name: "Board",
+ props: ["player", "gameId"],
  data() {
   return {
    fields: ["", "", "", "", "", "", "", "", ""],
@@ -22,7 +24,21 @@ export default {
  },
  methods: {
   updateField(index) {
-   this.fields.splice(index, 1, 'X');
+   patchGame(this.gameId, { field: index, player: this.player });
+   //if (resp == ok)
+   this.fields.splice(index, 1, this.player);
+   //else show bad message
+  },
+  endGame() {
+   deleteGame(this.gameId);
+  },
+ },
+ watch: {
+  // eslint-disable-next-line no-unused-vars
+  fields(newFields, _) {
+   if (newFields.every((element) => element !== "")) {
+    this.endGame();
+   }
   },
  },
 };
