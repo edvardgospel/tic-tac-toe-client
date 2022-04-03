@@ -8,13 +8,19 @@
     Join game
    </button>
   </div>
-  <Board v-if="gameStarted" :player="player" :gameId="gameId" />
+  <Board
+   v-if="gameStarted"
+   :player="player"
+   :gameId="gameId"
+   :fields="fields"
+   :nextPlayer="nextPlayer"
+  />
  </div>
 </template>
 
 <script>
 import Board from "./Board.vue";
-import { postGame, putGame } from "../client/index";
+import { postGame, putGame, joinGame } from "../client/index";
 export default {
  name: "Game",
  components: {
@@ -25,6 +31,8 @@ export default {
    gameStarted: false,
    player: "",
    gameId: 0,
+   fields: [],
+   nextPlayer: "",
   };
  },
  computed: {
@@ -41,17 +49,40 @@ export default {
    }
   },
   async startGame() {
-   this.player = "X";
-   this.gameStarted = true;
    const resp = await postGame();
-   this.gameId = resp.id;
+   if (resp.status === 201) {
+    const { id, fields, nextPlayer } = await resp.json();
+    this.gameId = id;
+    this.fields = fields;
+    this.nextPlayer = nextPlayer;
+    this.player = "X";
+    this.gameStarted = true;
+   }
   },
   async restartGame() {
-   await putGame(this.gameId);
+   this.gameStarted = false;
+   const resp = await putGame(this.gameId, {
+    fields: ["", "", "", "", "", "", "", "", ""],
+    nextPlayer: "X",
+   });
+   if (resp.status === 200) {
+    const { id } = await resp.json();
+    this.gameId = id;
+    this.fields = ["", "", "", "", "", "", "", "", ""];
+    this.nextPlayer = "X";
+    this.gameStarted = true;
+   }
   },
-  joinGame() {
-   this.player = "O";
-   this.gameStarted = true;
+  async joinGame() {
+   const resp = await joinGame();
+   if (resp.status === 200) {
+    const { id, fields, nextPlayer } = await resp.json();
+    this.gameId = id;
+    this.fields = fields;
+    this.nextPlayer = nextPlayer;
+    this.player = "O";
+    this.gameStarted = true;
+   }
   },
  },
 };
