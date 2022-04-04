@@ -1,4 +1,4 @@
-# tic-tac-toe-client
+# Tic Tac Toe Client
 
 ## Project setup
 ```
@@ -20,5 +20,13 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Project description
+```
+Provides a user interface for an interactive Tic Tac Toe app. This game supports multi-browser 1 on 1 game.
+
+Functionalities: Start game, join game, restart game.
+
+Help for local testing: After starting both the client and server applications, go to the main page and click on `Start Game` button to initialize a game. Then open a second browser tab, go againt to the main page and click on 'Join Game' to join the previously initialized game. At this point an interactive game can be played.
+
+Suggestion: Don't close browser tabs.
+```
